@@ -1,3 +1,5 @@
+// Aplicando Adapter
+
 class LegacyDocumentConverter {
   convertDocument(fileName) {
     console.log(`Convertendo o documento: "${fileName}" usando o sistema legado.`);

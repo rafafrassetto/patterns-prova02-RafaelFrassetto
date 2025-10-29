@@ -1,3 +1,5 @@
+// Aplicando Bridge
+
 class OutputFormat {
   renderHeader() {}
   renderData(data) {}
