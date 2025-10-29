@@ -1,58 +1,48 @@
-
-class PlataformaEnvio {
-  enviar(texto) {}
-}
-
-class Email extends PlataformaEnvio {
-  enviar(texto) {
-    console.log(`[Email] Enviando: "${texto}"`);
+class LegacyDocumentConverter {
+  convertDocument(fileName) {
+    console.log(`Convertendo o documento: "${fileName}" usando o sistema legado.`);
   }
 }
 
-
-class SMS extends PlataformaEnvio {
-  enviar(texto) {
-    console.log(`[SMS] Enviando: "${texto}"`);
+class ModernFileConverterAPI {
+  processFileContent(fileBytes) {
+    const fileSizeInMB = fileBytes / 1024 / 1024;
+    console.log(`Processando e convertendo arquivo de ${fileSizeInMB.toFixed(2)} MB via API moderna.`);
   }
 }
 
-class Mensagem {
-  constructor(plataforma) {
-
-    this.plataforma = plataforma;
+class ModernConverterAdapter {
+  constructor(modernAPI) {
+    this.modernAPI = modernAPI;
   }
 
+  convertDocument(fileName) {
+    console.log(`[Adaptador] Buscando conteúdo de "${fileName}"...`);
+    const fileBytes = fileName.length * 1000 * 1024;
 
-  disparar(texto) {
-    this.plataforma.enviar(texto);
+    this.modernAPI.processFileContent(fileBytes);
   }
 }
 
-class MensagemComLog extends Mensagem {
-
-  registrarLog() {
-    console.log("(Log: Mensagem sendo preparada para envio...)");
+class ConversionProcessor {
+  constructor(converterSystem) {
+    this.converterSystem = converterSystem;
   }
 
+  convert(fileName) {
+    this.converterSystem.convertDocument(fileName);
+  }
 }
 
+// --- Uso ---
 
-const plataformaEmail = new Email();
-const plataformaSMS = new SMS();
+const legacyConverter = new LegacyDocumentConverter();
+const processorLegacy = new ConversionProcessor(legacyConverter);
+processorLegacy.convert("Relatorio_Antigo_Q3.doc");
 
+console.log("\n" + "-".repeat(30) + "\n");
 
-const msgSimples = new Mensagem(plataformaEmail);
-
-
-const msgComLog = new MensagemComLog(plataformaSMS);
-
-
-
-console.log("--- Mensagem Simples por Email ---");
-msgSimples.disparar("Olá, tudo bem?");
-
-console.log("\n");
-
-console.log("--- Mensagem com Log por SMS ---");
-msgComLog.registrarLog();
-msgComLog.disparar("Reunião cancelada!");
+const modernAPI = new ModernFileConverterAPI();
+const modernAdapter = new ModernConverterAdapter(modernAPI); 
+const processorModern = new ConversionProcessor(modernAdapter); 
+processorModern.convert("Nova_Proposta_Comercial_2025.docx");
