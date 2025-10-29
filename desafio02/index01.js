@@ -1,46 +1,58 @@
-class LegacyPaymentSystem {
-  makePayment(amount) {
-    console.log(`Pagando R$${amount} com sistema legado.`);
+
+class PlataformaEnvio {
+  enviar(texto) {}
+}
+
+class Email extends PlataformaEnvio {
+  enviar(texto) {
+    console.log(`[Email] Enviando: "${texto}"`);
   }
 }
 
-class ModernPaymentAPI {
-  process(amountInCents) {
-    console.log(`Pagamento de R$${amountInCents / 100} via API moderna.`);
+
+class SMS extends PlataformaEnvio {
+  enviar(texto) {
+    console.log(`[SMS] Enviando: "${texto}"`);
   }
 }
 
-class ModernPaymentAdapter {
-  constructor(modernApi) {
-    this.modernApi = modernApi;
+class Mensagem {
+  constructor(plataforma) {
+
+    this.plataforma = plataforma;
   }
 
-  makePayment(amount) {
-    console.log("Adapter: Convertendo R$ para centavos...");
-    const amountInCents = amount * 100;
-    this.modernApi.process(amountInCents);
-  }
-}
 
-class PaymentProcessor {
-  constructor(paymentSystem) {
-    this.paymentSystem = paymentSystem;
-  }
-
-  pay(amount) {
-    this.paymentSystem.makePayment(amount);
+  disparar(texto) {
+    this.plataforma.enviar(texto);
   }
 }
 
-console.log("--- 1. Usando o Sistema Legado (Original) ---");
-const legacy = new LegacyPaymentSystem();
-const legacyProcessor = new PaymentProcessor(legacy);
-legacyProcessor.pay(100);
+class MensagemComLog extends Mensagem {
+
+  registrarLog() {
+    console.log("(Log: Mensagem sendo preparada para envio...)");
+  }
+
+}
+
+
+const plataformaEmail = new Email();
+const plataformaSMS = new SMS();
+
+
+const msgSimples = new Mensagem(plataformaEmail);
+
+
+const msgComLog = new MensagemComLog(plataformaSMS);
+
+
+
+console.log("--- Mensagem Simples por Email ---");
+msgSimples.disparar("Olá, tudo bem?");
 
 console.log("\n");
 
-console.log("--- 2. Usando a API Moderna (com Adapter) ---");
-const modernApi = new ModernPaymentAPI();
-const adapter = new ModernPaymentAdapter(modernApi);
-const modernProcessor = new PaymentProcessor(adapter);
-modernProcessor.pay(250);
+console.log("--- Mensagem com Log por SMS ---");
+msgComLog.registrarLog();
+msgComLog.disparar("Reunião cancelada!");
